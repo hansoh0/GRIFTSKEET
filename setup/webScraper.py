@@ -16,8 +16,9 @@ import argparse, contextlib, html, logging, re, time, requests, os
 log = logging.getLogger("pyWebScraper")
 
 # Setup globals
-load_dotenv("/".join(os.getcwd().split("/")[:-1]))
-_BASE_URL = os.getenv('DEFAULT___BASE_URL')
+load_dotenv(Path(__file__).parent.parent / ".env")
+_BASE_URL = os.getenv('DEFAULT_BASE_URL')
+print(_BASE_URL)
 _OUTPUT_NAMES = {"title": "titleTexts.txt", "subhead": "subheadTexts.txt", "article": "articleTexts.txt"}
 
 # Target site is a wordpress site - setting custom user agent to bypass any restrictions
@@ -53,6 +54,7 @@ def get_max_page(base_url):
 #   base_url (string) - base url of the site we are scraping
 # Return: None
 def iterate_pages(start, end, delay, base_url):
+    print(base_url)
     for i in range(start, end + 1):
         url = f"{base_url}/articles/page/{i}/"
         log.info("Parsing page %s", url)
@@ -109,7 +111,7 @@ def _parse_args(argv):
     ap.add_argument("--base-url", default=_BASE_URL)
     ap.add_argument("--out-dir", default="corpus")
     ap.add_argument("--append", action="store_true")
-    return ap._parse_args(argv)
+    return ap.parse_args(argv)
 
 # Main routine
 # Params: argv (default none; string[]) - command line arguments
